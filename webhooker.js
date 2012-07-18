@@ -1,5 +1,6 @@
 var app = require('express').createServer()
-    , Diffbot = require('diffbot').Diffbot;
+    , Diffbot = require('diffbot').Diffbot
+    , fs = require('fs');
 
 app.get('/', function(req, res){
   res.send('hello world');
@@ -8,8 +9,11 @@ app.get('/', function(req, res){
 
 // look to the DIFFBOT_TOKEN environmetn variable
 // for the develop token
-var token = process.env.DIFFBOT_TOKEN;
-var diffbot = new Diffbot(token);
+var DIFFBOT_TOKEN = process.env.DIFFBOT_TOKEN;
+var diffbot = new Diffbot(DIFFBOT_TOKEN);
+
+// Where to save diffbot result files
+var DATA_DIRECTORY = process.env.DATA_DIRECTORY
 
 // TODO: make this regex less evil.
 app.get(/^\/diffbot\/(.*)/, function(req, res){
@@ -18,10 +22,18 @@ app.get(/^\/diffbot\/(.*)/, function(req, res){
                     stats: true,
                     summary: true,
                     tags: true};
+    res.send(JSON.stringify(payload));
+    //res.send(JSON.stringify(payload), {'Content-Disposition': filename});
     diffbot.article(payload, function(err, response) {
-        var filename = "attachment; filename=\"" + response.title +"\".json";
-        console.log(response.title);
-        res.send(JSON.stringify(response), {'Content-Disposition': filename});
+        var filename = new Date() + response.title +"\".json";
+        //console.log(response.title);
+        fs.writeFile(DATA_DIRECTORY + filename, JSON.stringify(response), function(err) {
+            if(err) {
+                console.log(err);
+            } else {
+                console.log("The file was saved!");
+            }
+        });
     });
 });
 
@@ -32,7 +44,6 @@ app.get(/^\/twitter\/https?:\/\/twitter.com\/([A-Za-z0-9_]+)\/status\/([0-9]+)/,
     console.log(url);
     res.redirect(url);
 })
-
 
 
 var port = process.env.PORT || 3000;
