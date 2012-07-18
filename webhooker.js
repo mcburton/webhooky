@@ -19,7 +19,9 @@ app.get(/^\/diffbot\/(.*)/, function(req, res){
                     summary: true,
                     tags: true};
     diffbot.article(payload, function(err, response) {
-        res.send(JSON.stringify(response));
+        var filename = "attachment; filename=\"" + response.title +"\".json";
+        console.log(response.title);
+        res.send(JSON.stringify(response), {'Content-Disposition': filename});
     });
 });
 
