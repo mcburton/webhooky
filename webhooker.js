@@ -25,8 +25,15 @@ app.get(/^\/diffbot\/(.*)/, function(req, res){
     });
 });
 
-//TODO: create handler for the twitter redirector
-//app.get()
+
+// Twitter redirector app
+app.get(/^\/twitter\/https?:\/\/twitter.com\/([A-Za-z0-9_]+)\/status\/([0-9]+)/, function(req, res){
+    var url = "https://api.twitter.com/1/statuses/show/" + req.params[1] + ".json";
+    console.log(url);
+    res.redirect(url);
+})
+
+
 
 var port = process.env.PORT || 3000;
 app.listen(port, function() {
