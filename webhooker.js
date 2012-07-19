@@ -22,8 +22,8 @@ app.get(/^\/diffbot\/(.*)/, function(req, res){
                     stats: true,
                     summary: true,
                     tags: true};
-    res.send(JSON.stringify(payload));
-    //res.send(JSON.stringify(payload), {'Content-Disposition': filename});
+    //res.send(JSON.stringify(payload));
+    res.send(JSON.stringify(payload), {'Content-Disposition': filename});
     diffbot.article(payload, function(err, response) {
         var filename = new Date() + response.title +"\".json";
         //console.log(response.title);
