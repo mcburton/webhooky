@@ -26,7 +26,7 @@ app.get(/^\/diffbot\/(.*)/, function(req, res){
     var date = new Date().toISOString()
     res.send(JSON.stringify(payload), {'Content-Disposition': date + ".json"});
     diffbot.article(payload, function(err, response) {
-        var filename = new Date() + response.title +"\".json";
+        var filename = new Date().toISOString() + response.title +"\".json";
         //console.log(response.title);
         fs.writeFile(DATA_DIRECTORY + filename, JSON.stringify(response), function(err) {
             if(err) {
