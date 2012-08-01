@@ -24,7 +24,8 @@ app.get(/^\/diffbot\/(.*)/, function(req, res){
                     summary: true,
                     tags: true};
     //res.send(JSON.stringify(payload));
-    var date = new Date().toISOString()
+    var date = new Date().toISOString();
+    console.log("Sending file " + date + ".txt with conents: " + req.params[0]);
     res.attachment(date + '.txt');
     res.send(req.params[0]);
     //res.send(JSON.stringify(payload), {'Content-Disposition': date + ".json"});
