@@ -17,6 +17,7 @@ var DATA_DIRECTORY = process.env.DATA_DIRECTORY
 
 // TODO: make this regex less evil.
 app.get(/^\/diffbot\/(.*)/, function(req, res){
+    console.log(req.params);
     var payload =  {uri: req.params[0],
                     comments: true,
                     stats: true,
@@ -24,18 +25,20 @@ app.get(/^\/diffbot\/(.*)/, function(req, res){
                     tags: true};
     //res.send(JSON.stringify(payload));
     var date = new Date().toISOString()
-    res.send(JSON.stringify(payload), {'Content-Disposition': date + ".json"});
-    diffbot.article(payload, function(err, response) {
-        var filename = new Date().toISOString() + "-" + response.title +"\.json";
-        //console.log(response.title);
-        fs.writeFile(DATA_DIRECTORY + filename, JSON.stringify(response), function(err) {
-            if(err) {
-                console.log(err);
-            } else {
-                console.log("The file was saved!");
-            }
-        });
-    });
+    res.attachment(date + '.txt');
+    res.send(req.params[0]);
+    //res.send(JSON.stringify(payload), {'Content-Disposition': date + ".json"});
+    // diffbot.article(payload, function(err, response) {
+    //     var filename = new Date().toISOString() + "-" + response.title +"\.json";
+    //     //console.log(response.title);
+    //     fs.writeFile(DATA_DIRECTORY + filename, JSON.stringify(response), function(err) {
+    //         if(err) {
+    //             console.log(err);
+    //         } else {
+    //             console.log("The file was saved!");
+    //         }
+    //     });
+    // });
 });
 
 
